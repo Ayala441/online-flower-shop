@@ -1,46 +1,39 @@
-<!DOCTYPE html>
-<html lang="kk">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Гүл Дүкені - Каталог</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <header class="navbar">
-        <div class="logo">🌸 ГүлМаркет</div>
-        <nav>
-            <a href="index.php">Басты бет</a>
-            <a href="catalog.php" class="active">Каталог</a>
-            <a href="login.php">Кіру / Тіркелу</a>
-        </nav>
-    </header>
+<?php include 'header.php'; ?>
 
-    <main class="container">
-        <h2>Тауарлар каталогы</h2>
-        <div class="product-grid">
-            <div class="product-card">
-                <h3>Қызыл раушан (15 дана)</h3>
-                <p class="price">15 000 ₸</p>
-                <button class="btn-buy">Себетке қосу</button>
-            </div>
-            <div class="product-card">
-                <h3>Ақ түймедақтар жинағы</h3>
-                <p class="price">10 000 ₸</p>
-                <button class="btn-buy">Себетке қосу</button>
-            </div>
-            <div class="product-card">
-                <h3>Мерекелік пиондар</h3>
-                <p class="price">22 000 ₸</p>
-                <button class="btn-buy">Себетке қосу</button>
-            </div>
+<div class="container">
+    <h2>Гүлдер каталогы және тапсырыс беру</h2>
+
+    <?php
+    // Форма жіберілген кезде сервер арқылы өңдеу ($_POST)
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $flower = htmlspecialchars($_POST['flower_name']);
+        $name = htmlspecialchars($_POST['client_name']);
+        $phone = htmlspecialchars($_POST['client_phone']);
+
+        if (!empty($flower) && !empty($name) && !empty($phone)) {
+            echo "<div style='background: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin: 20px 0;'>Құрметті <b>$name</b>, сіздің <b>$flower</b> тауарына жасаған тапсырысыңыз қабылданды! Біз сізге $phone нөмірі арқылы хабарласамыз. 🌸</div>";
+        } else {
+            echo "<div style='background: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin: 20px 0;'>Барлық өрістерді толтыру міндетті!</div>";
+        }
+    }
+    ?>
+
+    <div class="product-grid">
+        <div class="product-card">
+            <h3>Қызыл раушан (15 дана)</h3>
+            <p class="desc">15 000 ₸</p>
+            <form method="POST">
+                <input type="hidden" name="flower_name" value="Қызыл раушан (15 дана)">
+                <div style="margin-bottom: 10px;">
+                    <input type="text" name="client_name" placeholder="Атыңыз" required style="width: 100%; padding: 8px;">
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <input type="text" name="client_phone" placeholder="Телефон нөмірі" required style="width: 100%; padding: 8px;">
+                </div>
+                <button type="submit" class="btn-buy">Тапсырыс беру</button>
+            </form>
         </div>
-    </main>
+    </div>
+</div>
 
-    <footer>
-        <p>&copy; 2026 Шағын онлайн гүл дүкені[cite: 1].</p>
-    </footer>
-
-    <script src="script.js"></script>
-</body>
-</html>
+<?php include 'footer.php'; ?>

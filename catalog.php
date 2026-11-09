@@ -28,59 +28,59 @@
         }
     }
 
-    // Іздеу сүзгісі
+    // Іздеу сүзгісін түзету
     $search = isset($_GET['search']) ? trim($_GET['search']) : '';
     $searchLower = mb_strtolower($search, 'UTF-8');
 
-    // Локалды images/ папкасындағы суреттер арқылы 8 түрлі букет
+    // 8 түрлі букет
     $flowers = [
         [
             "name" => "Қызыл раушан шоғы (15 дана)",
             "price" => "15 000 ₸",
             "img" => "images/roza.jpg",
-            "keywords" => ["раушан", "қызыл", "розы"]
+            "keywords" => ["раушан", "қызыл", "розы", "қызыл раушан"]
         ],
         [
             "name" => "Ақ түймедақтар букеті (10 дана)",
             "price" => "10 000 ₸",
             "img" => "images/tuymedak.jpg",
-            "keywords" => ["түймедақ", "ақ", "ромашки"]
+            "keywords" => ["түймедақ", "ақ", "ромашки", "ақ түймедақтар"]
         ],
         [
             "name" => "Мерекелік пиондар букеті (7 дана)",
             "price" => "22 000 ₸",
             "img" => "images/pion.jpg",
-            "keywords" => ["пион", "мерекелік", "пионы"]
+            "keywords" => ["пион", "мерекелік", "пионы", "пиондар"]
         ],
         [
             "name" => "Нәзік қызғалдақтар (11 дана)",
             "price" => "12 000 ₸",
             "img" => "images/qyzgaldak.jpg",
-            "keywords" => ["қызғалдақ", "тюльпаны"]
+            "keywords" => ["қызғалдақ", "тюльпаны", "нәзік қызғалдақтар"]
         ],
         [
             "name" => "Ақ раушан гүл шоғы (21 дана)",
             "price" => "20 000 ₸",
             "img" => "images/white_roza.jpg",
-            "keywords" => ["раушан", "ақ"]
+            "keywords" => ["раушан", "ақ", "розы", "ақ раушан гүл шоғы"]
         ],
         [
             "name" => "Микс жазғы гүлдер букеті",
             "price" => "17 500 ₸",
             "img" => "images/mix.jpg",
-            "keywords" => ["микс", "жазғы", "аула"]
+            "keywords" => ["микс", "жазғы", "гүлдер", "микс жазғы гүлдер букеті"]
         ],
         [
             "name" => "Премиум гортензия букеті",
             "price" => "25 000 ₸",
             "img" => "images/gortenziya.jpg",
-            "keywords" => ["гортензия", "премиум"]
+            "keywords" => ["гортензия", "премиум", "премиум гортензия букеті"]
         ],
         [
             "name" => "Қызғылт қалампырлар шоғы",
             "price" => "9 500 ₸",
             "img" => "images/kalampyr.jpg",
-            "keywords" => ["қалампыр", "қызғылт"]
+            "keywords" => ["қалампыр", "қызғылт", "қызғылт қалампырлар шоғы"]
         ]
     ];
 
@@ -92,10 +92,25 @@
             $match = true;
             if ($search !== '') {
                 $match = false;
-                foreach ($f['keywords'] as $kw) {
-                    if (str_contains($searchLower, $kw) || str_contains($kw, $searchLower)) {
-                        $match = true;
-                        break;
+                $flowerNameLower = mb_strtolower($f['name'], 'UTF-8');
+                
+                // Егер атауында ізделген сөз толық бар болса немесе кілтсөздердің бірі дәл сәйкессе
+                if (str_contains($flowerNameLower, $searchLower)) {
+                    $match = true;
+                } else {
+                    foreach ($f['keywords'] as $kw) {
+                        if ($kw === $searchLower || str_contains($kw, $searchLower)) {
+                            // Егер іздеген сөз тым қысқа (мысалы "ақ") болса, басқа жалпы гүлдерге шатасып кетпеуін қадағалаймыз
+                            if (mb_strlen($searchLower, 'UTF-8') <= 2) {
+                                if ($kw === $searchLower) {
+                                    $match = true;
+                                    break;
+                                }
+                            } else {
+                                $match = true;
+                                break;
+                            }
+                        }
                     }
                 }
             }
